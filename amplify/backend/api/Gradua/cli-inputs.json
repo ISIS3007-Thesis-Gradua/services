@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/randomize": {
+      "name": "/randomize",
+      "lambdaFunction": "Randomizer",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "corpusDb",
+      "environmentVariableName": "CORPUS_DB"
+    }
+  ]
+}
