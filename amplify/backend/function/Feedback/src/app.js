@@ -25,10 +25,9 @@ app.use(function (req, res, next) {
 /**********************
  * routes             *
  **********************/
-app.use('/randomize', require('./routes/randomizer.route'))
-
+app.use('/feedback', require('./routes/feedback.route'))
 app.listen(3000, function () {
-  console.log('==>> randomizer has started')
+  console.log('==>> feedback service has started')
 })
 
 // Export the app object. When executing the application local this does nothing. However,

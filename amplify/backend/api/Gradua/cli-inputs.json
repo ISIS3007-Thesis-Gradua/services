@@ -7,6 +7,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/feedback": {
+      "name": "/feedback",
+      "lambdaFunction": "Feedback",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }
