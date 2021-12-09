@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
-const { v4: uuidv4 } = require('uuid')
 module.exports = new mongoose.Schema(
   {
-    owner: { type: String, default: uuidv4 },
+    owner: String,
     moodBefore: Number,
     moodAfter: Number,
     anxietyBefore: Number,
@@ -10,7 +9,7 @@ module.exports = new mongoose.Schema(
     stressBefore: Number,
     stressAfter: Number,
     score: Number,
-    feedbacks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'feedback' }]
+    routine: { type: String, ref: 'routine' }
   },
   { autoCreate: true }
 )

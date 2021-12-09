@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const routineSchema = new mongoose.Schema(
   {
+    _id: { type: String, required: true },
     step00: String,
     step01: String,
     step1: String,
@@ -14,18 +15,5 @@ const routineSchema = new mongoose.Schema(
   },
   { autoCreate: true }
 )
-routineSchema.index(
-  {
-    step00: 1,
-    step01: 1,
-    step1: 1,
-    step2: 1,
-    step3: 1,
-    step4: 1,
-    step5: 1,
-    step6: 1,
-    step7: 1
-  },
-  { unique: true }
-)
+routineSchema.index({ _id: 1 }, { unique: true })
 module.exports = routineSchema

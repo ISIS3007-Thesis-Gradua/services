@@ -92,7 +92,7 @@ const randomize = async (req, res) => {
       return routine[stepName].reduce(reduceToTime, 0)
     }
     // returns true if the total time of the generated meditation is greater than maxTime
-    const isInTimeLimit = () => currenTime <= maxTime * 0.9
+    const isLessThanTimeLimit = () => currenTime <= maxTime * 0.9
 
     // ============================================================
     // ======================= algorithm ==========================
@@ -115,13 +115,13 @@ const randomize = async (req, res) => {
     // with the rest of the time we create a loop for the procedural
     // generation of the step sequece 3,4,5
     // stopping in any part of the procedural generation if the threshold is reached
-    while (isInTimeLimit()) {
+    while (isLessThanTimeLimit()) {
       currenTime += await updateStep(Step3, stepNames.step3)
-      if (!isInTimeLimit()) {
+      if (!isLessThanTimeLimit()) {
         break
       }
       currenTime += await updateStep(Step4, stepNames.step4)
-      if (!isInTimeLimit()) {
+      if (!isLessThanTimeLimit()) {
         break
       }
       currenTime += await updateStep(Step5, stepNames.step5)
