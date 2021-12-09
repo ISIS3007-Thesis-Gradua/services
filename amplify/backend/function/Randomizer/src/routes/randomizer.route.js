@@ -4,10 +4,13 @@ const router = new express.Router()
 
 /*
  * get a random meditation form the meditation framework
- * definition: /randomize?time={time}&avg={averageCharPerSec}
- * time => meditation's duration in minutes
- * averageTimePerLetter
- * response body:
+ * randomize: /randomize?time=*3*&wordsPerMin=*170*&charsPerWord=*7*
+    * time -> meditation's duration in minutes
+    * wordsPerMin -> average number of words per minute
+    * charsPerWord -> average number of characters in words
+
+```
+  body:
     {
     "step00": [
             {
@@ -23,6 +26,7 @@ const router = new express.Router()
             }
         ],
     }
+```
  */
 router.get('/', randomize)
 

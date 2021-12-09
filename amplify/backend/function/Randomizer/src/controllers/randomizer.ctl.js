@@ -32,10 +32,11 @@ const randomize = async (req, res) => {
     // ============================================================
     // ======================= variables ==========================
     // ============================================================
-    const { time = 0, avgWordsPerMin = 170, charsPerWord = 10 } = req.query // the default values matches spanish
-    const avgTimePerChar = 1 / ((avgWordsPerMin / 60) * charsPerWord)
-    const maxTime = time * 60
-    let currenTime = 0
+    const { time = 3, wordsPerMin = 170, charsPerWord = 10 } = req.query // the default values matches spanish
+    const avgTimePerChar = 1 / ((wordsPerMin / 60) * charsPerWord)
+    // ( time * seconds in min ) * threshold (10% => 90% => 0.9)
+    const maxTime = time * 60 * 0.9
+    let totalTime = 0
     const stepNames = {
       step00: 'step00',
       step01: 'step01',
@@ -65,7 +66,6 @@ const randomize = async (req, res) => {
     const updateStep = async (Step, stepName) => {
       // calculates the time of a given ssml string
       const reduceToTime = (prevTime, currSSML) => {
-        console.log(stepName, ' reducer ================ ', currSSML)
         // Docs for this Regex: https://regex101.com/r/6CreYZ/1
         // Esta es una opción más "bervosa" y exacta
 
@@ -74,14 +74,12 @@ const randomize = async (req, res) => {
         const filter = /<break[^/>]*\/>/g
         const tagsTime = (currSSML.content.match(filter) ?? []).reduce(
           (prev, curr) => {
-            console.log('second reducer ==> ', prev, '===', curr)
             return prev + getTimeFromSSML(curr)
           },
           0
         )
         const textTime =
           currSSML.content.replace(/ *<[^>]*\) */g, '').length * avgTimePerChar
-        console.log('===>> ', tagsTime, '===', textTime)
         return prevTime + tagsTime + textTime
       }
       // get the step
@@ -92,42 +90,42 @@ const randomize = async (req, res) => {
       return routine[stepName].reduce(reduceToTime, 0)
     }
     // returns true if the total time of the generated meditation is greater than maxTime
-    const isLessThanTimeLimit = () => currenTime <= maxTime * 0.9
+    const isLessThanTimeLimit = () => totalTime <= maxTime
 
     // ============================================================
     // ======================= algorithm ==========================
     // ============================================================
 
     // retrives welcome message
-    currenTime += await updateStep(Step00, stepNames.step00)
+    totalTime += await updateStep(Step00, stepNames.step00)
     // retrives the before start message
-    currenTime += await updateStep(Step01, stepNames.step01)
+    totalTime += await updateStep(Step01, stepNames.step01)
     // retrives the first step
-    currenTime += await updateStep(Step1, stepNames.step1)
+    totalTime += await updateStep(Step1, stepNames.step1)
     // retrives the sixth step
-    currenTime += await updateStep(Step6, stepNames.step6)
+    totalTime += await updateStep(Step6, stepNames.step6)
     // retrives the last step
-    currenTime += await updateStep(Step7, stepNames.step7)
+    totalTime += await updateStep(Step7, stepNames.step7)
     // randomly chose if the second step will be retrived
     if (Math.floor(Math.random() * 2) === 1) {
-      currenTime += await updateStep(Step2, stepNames.step2)
+      totalTime += await updateStep(Step2, stepNames.step2)
     }
     // with the rest of the time we create a loop for the procedural
     // generation of the step sequece 3,4,5
     // stopping in any part of the procedural generation if the threshold is reached
     while (isLessThanTimeLimit()) {
-      currenTime += await updateStep(Step3, stepNames.step3)
+      totalTime += await updateStep(Step3, stepNames.step3)
       if (!isLessThanTimeLimit()) {
         break
       }
-      currenTime += await updateStep(Step4, stepNames.step4)
+      totalTime += await updateStep(Step4, stepNames.step4)
       if (!isLessThanTimeLimit()) {
         break
       }
-      currenTime += await updateStep(Step5, stepNames.step5)
+      totalTime += await updateStep(Step5, stepNames.step5)
     }
 
-    res.status(200).send({ routine: routine, totalTime: currenTime })
+    res.status(200).send({ routine: routine, totalTime: totalTime })
   } catch (err) {
     console.log(err)
     res.status(404).send({ message: err.message })
