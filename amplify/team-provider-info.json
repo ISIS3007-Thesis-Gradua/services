@@ -16,11 +16,23 @@
         "Randomizer": {
           "corpusDb": "mongodb+srv://admin:HDthdCvcq6tW65D@gradua.hbsqg.mongodb.net/corpus?retryWrites=true&w=majority",
           "deploymentBucketName": "amplify-gradua-dev-145557-deployment",
-          "s3Key": "amplify-builds/Randomizer-4d5371725665346a6e66-build.zip"
+          "s3Key": "amplify-builds/Randomizer-6478646f78493062432f-build.zip"
         },
         "Feedback": {
           "deploymentBucketName": "amplify-gradua-dev-145557-deployment",
-          "s3Key": "amplify-builds/Feedback-334e2f444a72476b4d57-build.zip"
+          "s3Key": "amplify-builds/Feedback-6c317048756a435a7075-build.zip"
+        },
+        "Recommender": {
+          "deploymentBucketName": "amplify-gradua-dev-145557-deployment",
+          "s3Key": "amplify-builds/Recommender-464b5441363356794d59-build.zip"
+        },
+        "PollyTTS": {
+          "deploymentBucketName": "amplify-gradua-dev-145557-deployment",
+          "s3Key": "amplify-builds/PollyTTS-6c327541647573797a71-build.zip"
+        },
+        "AzureTTS": {
+          "deploymentBucketName": "amplify-gradua-dev-145557-deployment",
+          "s3Key": "amplify-builds/AzureTTS-7648526b50426e644648-build.zip"
         }
       }
     }
