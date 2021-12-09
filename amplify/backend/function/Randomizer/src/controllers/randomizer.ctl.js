@@ -1,24 +1,28 @@
 // eslint-disable-next-line import/no-absolute-path
 const connectToDatabase = require('../schemas')
-const { XMLParser } = require('fast-xml-parser')
 const getTimeFromSSML = (text) => {
   // This is just for getting the numbers in te String. Shouldn't be more than 1 chain of numbers
-  const numbers = /d+/
+  const numbers = /d+/g
   // This regex supports spaces between the number and the seconds key "s".
-  const seconds = /d+s*s/
+  const seconds = /d+s*s/g
 
-  const miliseconds = /d+s*ms/
-  console.log()
-  const [matched] = text.match(numbers)
+  const miliseconds = /d+s*ms/g
+  let matched
+  try {
+    matched = numbers.exec(text)
+  } catch (error) {
+    console.error(error)
+  }
   const parsedNumbers = parseInt(matched ?? '100')
-  if (text.test(miliseconds)) {
-    return 1000 * parsedNumbers
-  } else if (text.test(seconds)) {
+  if (miliseconds.test(text)) {
+    return parsedNumbers / 1000
+  } else if (seconds.test(text)) {
     return parsedNumbers
   } else {
-    return 1000 * parsedNumbers
+    return parsedNumbers / 1000
   }
 }
+
 const randomize = async (req, res) => {
   const {
     models: { Step00, Step01, Step1, Step2, Step3, Step4, Step5, Step6, Step7 }
@@ -26,11 +30,10 @@ const randomize = async (req, res) => {
 
   try {
     // ============================================================
-    // ========================variables===========================
+    // ======================= variables ==========================
     // ============================================================
     const { time = 0, avgWordsPerMin = 170, charsPerWord = 10 } = req.query // the default values matches spanish
-    const avgTimePerChar = (avgWordsPerMin * charsPerWord) / 60
-    console.log(avgTimePerChar)
+    const avgTimePerChar = 1 / ((avgWordsPerMin / 60) * charsPerWord)
     const maxTime = time * 60
     let currenTime = 0
     const stepNames = {
@@ -56,16 +59,30 @@ const randomize = async (req, res) => {
       [stepNames.step7]: []
     }
     // ============================================================
-    // ========================functions===========================
+    // ======================= functions ==========================
     // ============================================================
     // retrives the content from a given step and inserts it into the response object
     const updateStep = async (Step, stepName) => {
       // calculates the time of a given ssml string
-      const reduceToTime = (prev, curr) => {
-        const tagsTime = getTimeFromSSML(curr.content)
-        const textTime = curr.content.length
-        console.log('===>> ', curr.content, '===', textTime)
-        return prev + tagsTime + textTime
+      const reduceToTime = (prevTime, currSSML) => {
+        console.log(stepName, ' reducer ================ ', currSSML)
+        // Docs for this Regex: https://regex101.com/r/6CreYZ/1
+        // Esta es una opción más "bervosa" y exacta
+
+        // Esta es más genérica. Usar cualquiera a discreción.
+        // Docs for this Regex: https://regex101.com/r/bzmddu/1
+        const filter = /<break[^/>]*\/>/g
+        const tagsTime = (currSSML.content.match(filter) ?? []).reduce(
+          (prev, curr) => {
+            console.log('second reducer ==> ', prev, '===', curr)
+            return prev + getTimeFromSSML(curr)
+          },
+          0
+        )
+        const textTime =
+          currSSML.content.replace(/ *<[^>]*\) */g, '').length * avgTimePerChar
+        console.log('===>> ', tagsTime, '===', textTime)
+        return prevTime + tagsTime + textTime
       }
       // get the step
       const step = await Step.aggregate([{ $sample: { size: 1 } }])
@@ -75,10 +92,10 @@ const randomize = async (req, res) => {
       return routine[stepName].reduce(reduceToTime, 0)
     }
     // returns true if the total time of the generated meditation is greater than maxTime
-    const checkTimeLimitReached = () => currenTime <= maxTime * 0.9
+    const isInTimeLimit = () => currenTime <= maxTime * 0.9
 
     // ============================================================
-    // ========================algorithm===========================
+    // ======================= algorithm ==========================
     // ============================================================
 
     // retrives welcome message
@@ -98,13 +115,13 @@ const randomize = async (req, res) => {
     // with the rest of the time we create a loop for the procedural
     // generation of the step sequece 3,4,5
     // stopping in any part of the procedural generation if the threshold is reached
-    while (checkTimeLimitReached()) {
+    while (isInTimeLimit()) {
       currenTime += await updateStep(Step3, stepNames.step3)
-      if (!checkTimeLimitReached()) {
+      if (!isInTimeLimit()) {
         break
       }
       currenTime += await updateStep(Step4, stepNames.step4)
-      if (!checkTimeLimitReached()) {
+      if (!isInTimeLimit()) {
         break
       }
       currenTime += await updateStep(Step5, stepNames.step5)
