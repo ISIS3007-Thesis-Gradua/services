@@ -16,7 +16,11 @@
         "Randomizer": {
           "corpusDb": "mongodb+srv://admin:HDthdCvcq6tW65D@gradua.hbsqg.mongodb.net/corpus?retryWrites=true&w=majority",
           "deploymentBucketName": "amplify-gradua-dev-145557-deployment",
-          "s3Key": "amplify-builds/Randomizer-72762f7244586b735734-build.zip"
+          "s3Key": "amplify-builds/Randomizer-4d5371725665346a6e66-build.zip"
+        },
+        "Feedback": {
+          "deploymentBucketName": "amplify-gradua-dev-145557-deployment",
+          "s3Key": "amplify-builds/Feedback-334e2f444a72476b4d57-build.zip"
         }
       }
     }
