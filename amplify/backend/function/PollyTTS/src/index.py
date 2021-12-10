@@ -1,47 +1,54 @@
-import awsgi
-from flask_cors import CORS
-from flask import Flask, jsonify, make_response
+import io
 import boto3
-import tempfile
-import os
-myText = """
-Hello,
-My name is Eralper.
-Welcome to my website kodyaz.com
-"""
-
+import awsgi
+from flask import Flask, Response, send_file
+from contextlib import closing
+from flask_cors import CORS
 
 app = Flask(__name__)
+
 CORS(app)
+
 # Constant variable with path prefix
 BASE_ROUTE = "/polly"
 
 
 @app.route(BASE_ROUTE, methods=['GET'])
-def polly():
+def speak():
+    print("si te respondi we pero me quede chikito")
+    AUDIO_FORMATS = {"ogg_vorbis": "audio/ogg",
+                     "mp3": "audio/mpeg",
+                     "pcm": "audio/wave; codecs=1"}
     client = boto3.client('polly')
-    voice = client.synthesize_speech(
-        OutputFormat='mp3',
-        Text='All Gaul is divided into three parts',
-        VoiceId='Joanna',
-    )
     try:
-        print("1")
-        print(voice['AudioStream'].next())
-        print("2")
-        response = make_response(voice['AudioStream'].next())
-        response.headers['Content-Type'] = 'audio/mpeg'
-        response.headers['Content-Disposition'] = 'attachment; filename=sound.mp3'
-        response.headers.extend({
-            'Content-Type': 'audio/mpeg',
-            'Content-Disposition': 'attachment; filename=sound.mp3',
-            'Cache-Control': 'no-cache'
-        })
-        return response
+        response = client.synthesize_speech(
+            OutputFormat='mp3',
+            Text='All Gaul is divided into three parts',
+            LanguageCode='es-MX',
+            VoiceId='Bianca'
+        )
+        if "AudioStream" in response:
+
+            with closing(response.get("AudioStream")) as stream:
+                print("Sending file")
+                return Response(
+                    stream.iter_chunks(chunk_size=1024),
+                    headers={
+                        # NOTE: Ensure stream is not cached.
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0',
+                    },
+                    mimetype=AUDIO_FORMATS["mp3"])
+                # return send_file(stream, mimetype=AUDIO_FORMATS['mp3'], attachment_filename='ttsResult', as_attachment=True)
     except Exception as e:
         print(e)
+        return Response(
+            str(e),
+            status=400,
+        )
 
 
 def handler(event, context):
-
+    print('>>>>>INFO>>>>> ${event}')
     return awsgi.response(app, event, context)

@@ -1,39 +1,25 @@
 {
   "function": {
-    "Randomizer": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "Feedback": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "PollyTTS": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Lambda",
+      "dependsOn": []
     },
-    "Recommender": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "AzureTTS": {
+    "Generator": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "api": {
-    "Gradua": {
+    "tesis": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "Randomizer",
+          "resourceName": "Generator",
           "attributes": [
             "Name",
             "Arn"
@@ -41,7 +27,7 @@
         },
         {
           "category": "function",
-          "resourceName": "Feedback",
+          "resourceName": "PollyTTS",
           "attributes": [
             "Name",
             "Arn"

@@ -72,7 +72,7 @@ const randomize = async (req, res) => {
         // Esta es más genérica. Usar cualquiera a discreción.
         // Docs for this Regex: https://regex101.com/r/bzmddu/1
         const filter = /<break[^/>]*\/>/g
-        const tagsTime = (currSSML.content.match(filter) ?? []).reduce(
+        const tagsTime = (currSSML.content??'').match(filter).reduce(
           (prev, curr) => {
             return prev + getTimeFromSSML(curr)
           },

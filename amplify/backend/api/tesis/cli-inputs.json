@@ -3,14 +3,14 @@
   "paths": {
     "/randomize": {
       "name": "/randomize",
-      "lambdaFunction": "Randomizer",
+      "lambdaFunction": "Generator",
       "permissions": {
         "setting": "open"
       }
     },
-    "/feedback": {
-      "name": "/feedback",
-      "lambdaFunction": "Feedback",
+    "/polly": {
+      "name": "/polly",
+      "lambdaFunction": "PollyTTS",
       "permissions": {
         "setting": "open"
       }

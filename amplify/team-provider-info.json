@@ -1,0 +1,28 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-serenity-dev-184902-authRole",
+      "UnauthRoleArn": "arn:aws:iam::093081769564:role/amplify-serenity-dev-184902-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::093081769564:role/amplify-serenity-dev-184902-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-serenity-dev-184902-deployment",
+      "UnauthRoleName": "amplify-serenity-dev-184902-unauthRole",
+      "StackName": "amplify-serenity-dev-184902",
+      "StackId": "arn:aws:cloudformation:us-east-1:093081769564:stack/amplify-serenity-dev-184902/997757b0-594a-11ec-a595-0a0666c2d4fb",
+      "AmplifyAppId": "d92mdrnlxpe4e"
+    },
+    "categories": {
+      "function": {
+        "PollyTTS": {
+          "deploymentBucketName": "amplify-serenity-dev-184902-deployment",
+          "s3Key": "amplify-builds/PollyTTS-4a70574c38626a64536a-build.zip"
+        },
+        "Generator": {
+          "deploymentBucketName": "amplify-serenity-dev-184902-deployment",
+          "s3Key": "amplify-builds/Generator-2b4b4744464a30744f38-build.zip",
+          "corpusDb": "mongodb+srv://admin:HDthdCvcq6tW65D@gradua.hbsqg.mongodb.net/corpus?retryWrites=true&w=majority"
+        }
+      }
+    }
+  }
+}

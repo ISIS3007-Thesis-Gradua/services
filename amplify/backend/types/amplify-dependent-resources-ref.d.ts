@@ -1,30 +1,12 @@
 export type AmplifyDependentResourcesAttributes = {
     "function": {
-        "Randomizer": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
-        "Feedback": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
         "PollyTTS": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "Recommender": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
-        "AzureTTS": {
+        "Generator": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -32,7 +14,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "Gradua": {
+        "tesis": {
             "RootUrl": "string",
             "ApiName": "string",
             "ApiId": "string"
