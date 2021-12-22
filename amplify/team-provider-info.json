@@ -15,13 +15,15 @@
       "function": {
         "PollyTTS": {
           "deploymentBucketName": "amplify-serenity-dev-184902-deployment",
-          "s3Key": "amplify-builds/PollyTTS-4a70574c38626a64536a-build.zip"
+          "s3Key": "amplify-builds/PollyTTS-67774b6e486270513731-build.zip"
         },
         "Generator": {
           "deploymentBucketName": "amplify-serenity-dev-184902-deployment",
-          "s3Key": "amplify-builds/Generator-2b4b4744464a30744f38-build.zip",
-          "corpusDb": "mongodb+srv://admin:HDthdCvcq6tW65D@gradua.hbsqg.mongodb.net/corpus?retryWrites=true&w=majority"
+          "s3Key": "amplify-builds/Generator-665335724a6e505a476e-build.zip"
         }
+      },
+      "auth": {
+        "serenity": {}
       }
     }
   }

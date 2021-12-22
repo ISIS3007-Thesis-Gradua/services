@@ -32,7 +32,7 @@ const randomize = async (req, res) => {
     // ============================================================
     // ======================= variables ==========================
     // ============================================================
-    const { time = 3, wordsPerMin = 170, charsPerWord = 10 } = req.query // the default values matches spanish
+    const { time = 6, wordsPerMin = 170, charsPerWord = 10 } = req.query // the default values matches spanish
     const avgTimePerChar = 1 / ((wordsPerMin / 60) * charsPerWord)
     // ( time * seconds in min ) * threshold (10% => 90% => 0.9)
     const maxTime = time * 60 * 0.9
