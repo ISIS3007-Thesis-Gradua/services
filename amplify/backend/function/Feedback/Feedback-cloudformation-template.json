@@ -15,6 +15,12 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "userfeedbackDb": {
+      "Type": "String"
+    },
+    "corpusDb": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -69,6 +75,12 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "USERFEEDBACK_DB": {
+              "Ref": "userfeedbackDb"
+            },
+            "CORPUS_DB": {
+              "Ref": "corpusDb"
             }
           }
         },

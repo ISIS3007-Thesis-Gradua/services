@@ -6,62 +6,40 @@ const { stepNames } = require('../utils')
 // mongoose config
 mongoose.Promise = global.Promise
 // lib variables
-let isConnected,
-  conn,
-  Step00,
-  Step01,
-  Step1,
-  Step2,
-  Step3,
-  Step4,
-  Step5,
-  Step6,
-  Step7
+const estado = {
+  isConnected: false,
+  conn: undefined,
+  models: {
+    Step00: undefined,
+    Step01: undefined,
+    Step1: undefined,
+    Step2: undefined,
+    Step3: undefined,
+    Step4: undefined,
+    Step5: undefined,
+    Step6: undefined,
+    Step7: undefined
+  }
+}
 // connection function
 module.exports = async () => {
   // if the connection exists return it else initialize conection and schemas
-  if (isConnected) {
+  if (estado.isConnected) {
     console.log('=> using existing database connection')
-    return {
-      conn: conn,
-      models: {
-        Step00,
-        Step01,
-        Step1,
-        Step2,
-        Step3,
-        Step4,
-        Step5,
-        Step6,
-        Step7
-      }
-    }
+    return estado
   } else {
     console.log('=> using new database connections')
-    conn = mongoose.createConnection(process.env.CORPUS_DB)
-    Step00 = conn.model(stepNames.step00, stepSchema)
-    Step01 = conn.model(stepNames.step01, stepSchema)
-    Step1 = conn.model(stepNames.step1, stepSchema)
-    Step2 = conn.model(stepNames.step2, stepSchema)
-    Step3 = conn.model(stepNames.step3, stepSchema)
-    Step4 = conn.model(stepNames.step4, stepSchema)
-    Step5 = conn.model(stepNames.step5, stepSchema)
-    Step6 = conn.model(stepNames.step6, stepSchema)
-    Step7 = conn.model(stepNames.step7, stepSchema)
-    isConnected = true
-    return {
-      conn: conn,
-      models: {
-        Step00,
-        Step01,
-        Step1,
-        Step2,
-        Step3,
-        Step4,
-        Step5,
-        Step6,
-        Step7
-      }
-    }
+    estado.conn = mongoose.createConnection(process.env.CORPUS_DB)
+    estado.models.Step00 = estado.conn.model(stepNames.step00, stepSchema)
+    estado.models.Step01 = estado.conn.model(stepNames.step01, stepSchema)
+    estado.models.Step1 = estado.conn.model(stepNames.step1, stepSchema)
+    estado.models.Step2 = estado.conn.model(stepNames.step2, stepSchema)
+    estado.models.Step3 = estado.conn.model(stepNames.step3, stepSchema)
+    estado.models.Step4 = estado.conn.model(stepNames.step4, stepSchema)
+    estado.models.Step5 = estado.conn.model(stepNames.step5, stepSchema)
+    estado.models.Step6 = estado.conn.model(stepNames.step6, stepSchema)
+    estado.models.Step7 = estado.conn.model(stepNames.step7, stepSchema)
+    estado.isConnected = true
+    return estado
   }
 }

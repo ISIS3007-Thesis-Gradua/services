@@ -56,6 +56,7 @@ const connectToDatabase = require('./schemas')
 ```
  */
 app.get('/generate', async (req, res, next) => {
+  console.log('[info] generating meditation')
   const {
     models: { Step00, Step01, Step1, Step2, Step3, Step4, Step5, Step6, Step7 }
   } = await connectToDatabase()
@@ -85,8 +86,14 @@ app.get('/generate', async (req, res, next) => {
     // ============================================================
     // retrives the content from a given step and inserts it into the response object
     const updateStep = async (Step, stepName) => {
-      // calculates the time of a given ssml string
-      const reduceToTime = (prevTime, currSSML) => {
+      // get the step
+      const step = await Step.aggregate([{ $sample: { size: 1 } }])
+      // set the new content
+      routine[stepName] = [...routine[stepName], ...step]
+      // return the time of the step
+      console.log(stepName)
+      return (routine[stepName] ?? []).reduce((prevTime, currSSML) => {
+        // calculates the time of a given ssml string
         // Docs for this Regex: https://regex101.com/r/6CreYZ/1
         // Esta es una opción más "bervosa" y exacta
 
@@ -101,13 +108,7 @@ app.get('/generate', async (req, res, next) => {
         const textTime =
           currSSML.content.replace(/ *<[^>]*\) */g, '').length * avgTimePerChar
         return prevTime + tagsTime + textTime
-      }
-      // get the step
-      const step = await Step.aggregate([{ $sample: { size: 1 } }])
-      // set the new content
-      routine[stepName] = [...routine[stepName], ...step]
-      // return the time of the step
-      return routine[stepName].reduce(reduceToTime, 0)
+      }, 0)
     }
     // returns true if the total time of the generated meditation is greater than maxTime
     const isLessThanTimeLimit = () => totalTime <= maxTime
@@ -144,16 +145,17 @@ app.get('/generate', async (req, res, next) => {
       }
       totalTime += await updateStep(Step5, stepNames.step5)
     }
-
+    console.log('[info] routine generated: ', routine)
+    console.log('[info] ETA: ', totalTime)
     res.status(200).send({ routine: routine, totalTime: totalTime })
   } catch (err) {
-    console.log(err)
+    console.error(err)
     res.status(404).send({ message: err.message })
   }
 })
 
 app.listen(3000, function () {
-  console.log('==>> Generator has started')
+  console.log('[server] generator service has started')
 })
 // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from
