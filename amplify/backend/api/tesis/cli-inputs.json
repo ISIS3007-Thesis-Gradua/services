@@ -1,16 +1,23 @@
 {
   "version": 1,
   "paths": {
-    "/randomize": {
-      "name": "/randomize",
-      "lambdaFunction": "Generator",
+    "/polly": {
+      "name": "/polly",
+      "lambdaFunction": "PollyTTS",
       "permissions": {
         "setting": "open"
       }
     },
-    "/polly": {
-      "name": "/polly",
-      "lambdaFunction": "PollyTTS",
+    "/feedback": {
+      "name": "/feedback",
+      "lambdaFunction": "Feedback",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/generate": {
+      "name": "/generate",
+      "lambdaFunction": "Generator",
       "permissions": {
         "setting": "open"
       }

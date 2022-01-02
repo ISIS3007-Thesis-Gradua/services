@@ -10,6 +10,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "Feedback": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "api": {
@@ -19,7 +24,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "Generator",
+          "resourceName": "PollyTTS",
           "attributes": [
             "Name",
             "Arn"
@@ -27,7 +32,15 @@
         },
         {
           "category": "function",
-          "resourceName": "PollyTTS",
+          "resourceName": "Feedback",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "Generator",
           "attributes": [
             "Name",
             "Arn"

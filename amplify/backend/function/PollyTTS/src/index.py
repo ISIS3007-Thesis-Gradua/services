@@ -1,4 +1,5 @@
 import io
+import base64
 import boto3
 import awsgi
 from flask import Flask, Response, send_file
@@ -11,16 +12,15 @@ CORS(app)
 
 # Constant variable with path prefix
 BASE_ROUTE = "/polly"
+AUDIO_FORMATS = {"ogg_vorbis": "audio/ogg",
+                 "mp3": "audio/mpeg",
+                 "pcm": "audio/wave; codecs=1"}
 
 
-@app.route(BASE_ROUTE, methods=['GET'])
+@app.route(BASE_ROUTE, methods=['POST'])
 def speak():
-    print("si te respondi we pero me quede chikito")
-    AUDIO_FORMATS = {"ogg_vorbis": "audio/ogg",
-                     "mp3": "audio/mpeg",
-                     "pcm": "audio/wave; codecs=1"}
-    client = boto3.client('polly')
     try:
+        client = boto3.client('polly')
         response = client.synthesize_speech(
             OutputFormat='mp3',
             Text='All Gaul is divided into three parts',
@@ -31,16 +31,21 @@ def speak():
 
             with closing(response.get("AudioStream")) as stream:
                 print("Sending file")
+                content = stream.read()
+                print(content)
+                audioEncoded = base64.b64encode(content)
+                print(audioEncoded)
                 return Response(
-                    stream.iter_chunks(chunk_size=1024),
+                    audioEncoded,
                     headers={
                         # NOTE: Ensure stream is not cached.
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
                         'Expires': '0',
+                        'Content-Type': AUDIO_FORMATS["mp3"],
+                        'Content-Disposition': 'attachment; filename=pollyttsresult.mp3',
                     },
                     mimetype=AUDIO_FORMATS["mp3"])
-                # return send_file(stream, mimetype=AUDIO_FORMATS['mp3'], attachment_filename='ttsResult', as_attachment=True)
     except Exception as e:
         print(e)
         return Response(
