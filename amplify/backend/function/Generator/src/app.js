@@ -97,7 +97,7 @@ app.get('/generate', async (req, res, next) => {
       // Esta es más genérica. Usar cualquiera a discreción.
       // Docs for this Regex: https://regex101.com/r/bzmddu/1
       const filter = /<break[^/>]*\/>/g
-      const tagsTime = (step.content ?? '')
+      const tagsTime = (step[0].content ?? '')
         .match(filter)
         .reduce((prev, curr) => {
           return prev + getTimeFromSSML(curr)
