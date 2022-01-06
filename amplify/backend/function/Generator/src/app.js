@@ -91,24 +91,20 @@ app.get('/generate', async (req, res, next) => {
       // set the new content
       routine[stepName] = [...routine[stepName], ...step]
       // return the time of the step
-      console.log(stepName)
-      return (routine[stepName] ?? []).reduce((prevTime, currSSML) => {
-        // calculates the time of a given ssml string
-        // Docs for this Regex: https://regex101.com/r/6CreYZ/1
-        // Esta es una opción más "bervosa" y exacta
-
-        // Esta es más genérica. Usar cualquiera a discreción.
-        // Docs for this Regex: https://regex101.com/r/bzmddu/1
-        const filter = /<break[^/>]*\/>/g
-        const tagsTime = (currSSML.content ?? '')
-          .match(filter)
-          .reduce((prev, curr) => {
-            return prev + getTimeFromSSML(curr)
-          }, 0)
-        const textTime =
-          currSSML.content.replace(/ *<[^>]*\) */g, '').length * avgTimePerChar
-        return prevTime + tagsTime + textTime
-      }, 0)
+      // calculates the time of a given ssml string
+      // Docs for this Regex: https://regex101.com/r/6CreYZ/1
+      // Esta es una opción más "bervosa" y exacta
+      // Esta es más genérica. Usar cualquiera a discreción.
+      // Docs for this Regex: https://regex101.com/r/bzmddu/1
+      const filter = /<break[^/>]*\/>/g
+      const tagsTime = (step.content ?? '')
+        .match(filter)
+        .reduce((prev, curr) => {
+          return prev + getTimeFromSSML(curr)
+        }, 0)
+      const textTime =
+        currSSML.content.replace(/ *<[^>]*\) */g, '').length * avgTimePerChar
+      return prevTime + tagsTime + textTime
     }
     // returns true if the total time of the generated meditation is greater than maxTime
     const isLessThanTimeLimit = () => totalTime <= maxTime
